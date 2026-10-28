@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "ts-node-dev src/app.ts",
-    "build": "tsc",
+    "build": "tsc --skipLibCheck",
     "start": "node dist/app.js",
     "prisma:seed": "ts-node prisma/seed.ts"
   },
