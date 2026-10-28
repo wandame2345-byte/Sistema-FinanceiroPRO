@@ -12,16 +12,16 @@ import { handleAjuda } from './commands/ajuda';
 import { handleRelatorio } from './commands/relatorio';
 export async function messageHandler(msg: proto.IWebMessageInfo, sock: WASocket): Promise<void> {
 const text = msg.message?.conversation || msg.message?.extendedTextMessage?.text || '';
+console.log(`[HANDLER] text="${text.substring(0, 50)}"`);
 if (!text.trim()) return;
 const jid = msg.key.remoteJid!;
 const phone = jid.replace('@s.whatsapp.net', '').replace(/\D/g, '');
 try {
 const user = await findOrCreateUser(phone, msg.pushName || phone);
+console.log(`[HANDLER] user=${user.id}`);
 const parsed = parseCommand(text);
-if (!parsed) {
-await sock.sendMessage(jid, { text: '💡 Olá! Sou seu assistente financeiro.\nDigite /ajuda para ver os comandos.' });
-return;
-}
+if (!parsed) { await sock.sendMessage(jid, { text: '💡 Digite /ajuda para ver os comandos.' }); return; }
+console.log(`[HANDLER] Comando: ${parsed.command}`);
 let response: string;
 switch (parsed.command) {
 case '/saldo': response = await handleSaldo(user.id); break;
@@ -33,11 +33,12 @@ case '/orcamento': response = await handleOrcamento(user.id); break;
 case '/adicionar': response = await handleAdicionar(user.id, parsed.args); break;
 case '/relatorio': response = await handleRelatorio(user.id); break;
 case '/ajuda': response = handleAjuda(); break;
-default: response = `❓ Comando desconhecido: ${parsed.command}\nDigite /ajuda.`;
+default: response = `❓ Comando desconhecido. Digite /ajuda.`;
 }
 await sock.sendMessage(jid, { text: response });
+console.log('[HANDLER] Resposta enviada ✅');
 } catch (error) {
-console.error('Erro:', error);
-await sock.sendMessage(jid, { text: '❌ Erro ao processar comando.' }).catch(() => {});
+console.error('[HANDLER] ERRO:', error);
+try { await sock.sendMessage(jid, { text: '❌ Erro interno.' }).catch(() => {}); } catch {}
 }
 }
