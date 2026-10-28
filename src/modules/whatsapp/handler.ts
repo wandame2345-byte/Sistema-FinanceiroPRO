@@ -26,7 +26,7 @@ export async function messageHandler(msg: proto.IWebMessageInfo, sock: WASocket)
     const phone = jid.replace('@s.whatsapp.net', '').replace(/\D/g, '');
     const user = await findOrCreateUser(phone, msg.pushName || phone);
     const parsed = parseCommand(text);
-    
+
     if (!parsed) return;
 
     let response = '';
