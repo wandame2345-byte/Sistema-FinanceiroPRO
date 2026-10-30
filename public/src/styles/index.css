@@ -1,4 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body { font-family: 'Inter', sans-serif; }
+
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --text-primary: #0f172a; /* Azul Escuro Profundo */
+  --text-secondary: #334155;
+  --accent-color: #1e3a8a; /* Azul Marinho */
+  --border-color: #e2e8f0;
+}
+
+body {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Componentes Padronizados */
+.btn-primary {
+  @apply bg-[#1e3a8a] text-white px-4 py-2 rounded-lg font-medium transition-all hover:bg-[#172554] active:scale-95 shadow-sm;
+}
+
+.card {
+  @apply bg-white p-6 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow;
+}
+
+.input-field {
+  @apply w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1e3a8a]/20 focus:border-[#1e3a8a] transition-all;
+}
