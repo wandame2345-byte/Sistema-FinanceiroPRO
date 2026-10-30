@@ -8,12 +8,25 @@ export default function Register({ onRegister }: { onRegister: (u: any, t: strin
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState(''); // Novo campo
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setError('');
+
+    // Validação: Senhas devem ser iguais
+    if (password !== confirmPassword) {
+      setError('As senhas não coincidem!');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('A senha deve ter pelo menos 6 caracteres.');
+      return;
+    }
+
     setLoading(true);
     try {
       const data = await authAPI.register({ name, email, password });
@@ -62,6 +75,21 @@ export default function Register({ onRegister }: { onRegister: (u: any, t: strin
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="Mínimo 6 caracteres" minLength={6} required />
+              </div>
+            </div>
+            {/* Novo Campo: Confirmar Senha */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Confirmar Senha</label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input 
+                  type="password" 
+                  value={confirmPassword} 
+                  onChange={e => setConfirmPassword(e.target.value)} 
+                  className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" 
+                  placeholder="Repita a senha" 
+                  required 
+                />
               </div>
             </div>
             <button type="submit" disabled={loading} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-lg transition mt-2">
